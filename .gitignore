@@ -1,0 +1,50 @@
+# Excluir diretórios de build
+bin/
+obj/
+
+# Excluir arquivos de configuração locais
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Excluir arquivos gerados pelo VS Code
+.vscode/
+
+# Configurações locais e temporárias
+*.log
+*.lock
+*.db
+*.DS_Store
+*.pdb
+
+# Excluir arquivos de backup
+*.bak
+*.old
+*.orig
+
+# Ignorar dependências
+packages/
+node_modules/
+
+# Ignorar arquivos temporários de sistema operacional
+Thumbs.db
+ehthumbs.db
+*.stackdump
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# Excluir arquivos de build do sistema
+*.dll
+*.exe
+*.so
+*.dylib
+
+# Excluir logs do Git e arquivos temporários
+*.log
+*.swp
+*.swo
+*.tmp
