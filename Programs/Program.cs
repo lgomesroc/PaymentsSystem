@@ -2,10 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using PaymentsSystem.Database.Connection;
 using PaymentsSystem.Services;
-using PaymentsSystem.DataBase.Models;
 using PaymentsSystem.DataBase.Services;
 
-namespace PaymentsSystem.Programs
+namespace PaymentsSystem.Programs // Altere o namespace para refletir a estrutura de pastas
 {
     class Program
     {
@@ -24,91 +23,39 @@ namespace PaymentsSystem.Programs
                 .AddScoped<CartaoDebitoService>()
                 .AddScoped<PixService>()
                 .AddScoped<BoletoService>()
+                .AddScoped<PaymentProgram>() // Adiciona o PaymentProgram
                 .BuildServiceProvider();
 
-            // Recupera os serviços via injeção de dependência
-            var cartaoCreditoService = serviceProvider.GetService<CartaoCreditoService>();
-            var cartaoDebitoService = serviceProvider.GetService<CartaoDebitoService>();
-            var pixService = serviceProvider.GetService<PixService>();
-            var boletoService = serviceProvider.GetService<BoletoService>();
+            // Recupera o PaymentProgram via injeção de dependência
+            var paymentProgram = serviceProvider.GetService<PaymentProgram>();
 
-            try
-            {
-                // Verifica se os serviços não são nulos antes de usá-los
-                if (cartaoCreditoService != null)
-                {
-                    // Exemplo de uso para Cartão de Crédito
-                    var cartaoCredito = new CartaoCreditoModels
-                    {
-                        NumeroCartaoCredito = "1234567812345678",
-                        DataValidadeCredito = new DateTime(2025, 12, 31),
-                        NomeNoCartaoCredito = "Luciano Gomes",
-                        CodigoSegurancaCredito = "123",
-                        CriadoEmCredito = DateTime.Now
-                    };
-                    cartaoCreditoService.AdicionarCartaoCredito(cartaoCredito);
-                }
-                else
-                {
-                    Console.WriteLine("Erro: Serviço de Cartão de Crédito não pôde ser resolvido.");
-                }
+            // Executa o programa de pagamento
+            paymentProgram?.Execute(); // Verifica se o serviço não é nulo antes de chamar
+        }
+    }
 
-                if (cartaoDebitoService != null)
-                {
-                    // Exemplo de uso para Cartão de Débito
-                    var cartaoDebito = new CartaoDebitoModels
-                    {
-                        NumeroCartaoDebito = "9876543210987654",
-                        NomeNoCartaoDebito = "Luciano Gomes",
-                        CriadoEmDebito = DateTime.Now,
-                        DataValidadeDebito = new DateTime(2025, 12, 31),
-                        CodigoSegurancaDebito = "456"
-                    };
-                    cartaoDebitoService.AdicionarCartaoDebito(cartaoDebito);
-                }
-                else
-                {
-                    Console.WriteLine("Erro: Serviço de Cartão de Débito não pôde ser resolvido.");
-                }
+    //Se tirar essa classe abaixo, dará erro.
+    internal class PaymentProgram
+    {
+        private PayPalService? payPalService;
+        private StripeService? stripeService;
+        private GooglePayService? googlePayService;
 
-                if (pixService != null)
-                {
-                    // Exemplo de uso para Pix
-                    var pix = new PixModels
-                    {
-                        ChavePix = "luciano@pix",
-                        NomeTitular = "Luciano Gomes",
-                        CriadoEmPix = DateTime.Now
-                    };
-                    pixService.AdicionarPix(pix);
-                }
-                else
-                {
-                    Console.WriteLine("Erro: Serviço de Pix não pôde ser resolvido.");
-                }
+        public PaymentProgram(PayPalService? payPalService, StripeService? stripeService, GooglePayService? googlePayService)
+        {
+            this.payPalService = payPalService;
+            this.stripeService = stripeService;
+            this.googlePayService = googlePayService;
+        }
 
-                if (boletoService != null)
-                {
-                    // Exemplo de uso para Boleto
-                    var boleto = new BoletoModels
-                    {
-                        NumeroBoleto = "12345678901234567890",
-                        NomeDoPagador = "Luciano Gomes",
-                        Valor = 100.50M,
-                        DataVencimento = new DateTime(2024, 12, 31),
-                        CriadoEmBoleto = DateTime.Now
-                    };
-                    boletoService.AdicionarBoleto(boleto);
-                }
-                else
-                {
-                    Console.WriteLine("Erro: Serviço de Boleto não pôde ser resolvido.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro: {ex.Message}");
-            }
+        internal void Execute()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void ExecutePayment(string v1, string v2, int v3)
+        {
+            throw new NotImplementedException();
         }
     }
 }

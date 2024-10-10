@@ -1,0 +1,54 @@
+using PaymentsSystem.Services;
+using System;
+
+namespace PaymentsSystem.Programs
+{
+    public class PaymentProgram
+    {
+        private readonly IPaymentService _payPalService;
+        private readonly IPaymentService _stripeService;
+        private readonly IPaymentService _googlePayService;
+
+        public PaymentProgram(
+            IPaymentService payPalService,
+            IPaymentService stripeService,
+            IPaymentService googlePayService)
+        {
+            _payPalService = payPalService;
+            _stripeService = stripeService;
+            _googlePayService = googlePayService;
+        }
+
+        public void ExecutePayment(string paymentMethod, string token, decimal amount)
+        {
+            IPaymentService paymentService;
+
+            // Escolher o serviço de pagamento correto com base no método
+            switch (paymentMethod.ToLower())
+            {
+                case "paypal":
+                    paymentService = _payPalService;
+                    break;
+                case "stripe":
+                    paymentService = _stripeService;
+                    break;
+                case "googlepay":
+                    paymentService = _googlePayService;
+                    break;
+                default:
+                    Console.WriteLine("Método de pagamento não suportado.");
+                    return;
+            }
+
+            try
+            {
+                paymentService.ProcessPayment(token, amount);
+                Console.WriteLine($"{paymentMethod} payment processed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao processar o pagamento: {ex.Message}");
+            }
+        }
+    }
+}

@@ -22,6 +22,7 @@ obj/
 *.bak
 *.old
 *.orig
+.env
 
 # Ignorar dependências
 packages/
