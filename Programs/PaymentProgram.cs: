@@ -1,53 +1,33 @@
 using PaymentsSystem.Services;
-using System;
 
 namespace PaymentsSystem.Programs
 {
     public class PaymentProgram
     {
-        private readonly IPaymentService _payPalService;
-        private readonly IPaymentService _stripeService;
-        private readonly IPaymentService _googlePayService;
+        private readonly Dictionary<string, IPaymentService> _paymentServices;
 
-        public PaymentProgram(
-            IPaymentService payPalService,
-            IPaymentService stripeService,
-            IPaymentService googlePayService)
+        public PaymentProgram(IEnumerable<IPaymentService> paymentServices)
         {
-            _payPalService = payPalService;
-            _stripeService = stripeService;
-            _googlePayService = googlePayService;
+            _paymentServices = paymentServices.ToDictionary(service => service.GetType().Name.Replace("Service", "").ToLower());
         }
 
         public void ExecutePayment(string paymentMethod, string token, decimal amount)
         {
-            IPaymentService paymentService;
-
-            // Escolher o serviço de pagamento correto com base no método
-            switch (paymentMethod.ToLower())
+            if (_paymentServices.TryGetValue(paymentMethod.ToLower(), out var paymentService))
             {
-                case "paypal":
-                    paymentService = _payPalService;
-                    break;
-                case "stripe":
-                    paymentService = _stripeService;
-                    break;
-                case "googlepay":
-                    paymentService = _googlePayService;
-                    break;
-                default:
-                    Console.WriteLine("Método de pagamento não suportado.");
-                    return;
+                try
+                {
+                    paymentService.ProcessPayment(token, amount);
+                    Console.WriteLine($"{paymentMethod} payment processed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao processar o pagamento: {ex.Message}");
+                }
             }
-
-            try
+            else
             {
-                paymentService.ProcessPayment(token, amount);
-                Console.WriteLine($"{paymentMethod} payment processed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro ao processar o pagamento: {ex.Message}");
+                Console.WriteLine("Método de pagamento não suportado.");
             }
         }
     }

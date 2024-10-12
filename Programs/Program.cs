@@ -19,21 +19,27 @@ namespace PaymentsSystem.Programs // Altere o namespace para refletir a estrutur
             // Setup da Injeção de Dependência
             var serviceProvider = new ServiceCollection()
                 .AddSingleton(new DatabaseConnection(configuration))
-                .AddScoped<CartaoCreditoService>()
-                .AddScoped<CartaoDebitoService>()
-                .AddScoped<PixService>()
-                .AddScoped<BoletoService>()
+                .AddScoped<IPaymentService, CartaoCreditoService>()
+                .AddScoped<IPaymentService, CartaoDebitoService>()
+                .AddScoped<IPaymentService, PixService>()
+                .AddScoped<IPaymentService, BoletoService>()
+                .AddScoped<IPaymentService, MercadoPagoService>()  // Adiciona o MercadoPagoService
+                .AddScoped<IPaymentService, PayPalService>()        // Adiciona o PayPalService
+                .AddScoped<IPaymentService, StripeService>()        // Adiciona o StripeService
+                .AddScoped<IPaymentService, GooglePayService>()     // Adiciona o GooglePayService
                 .AddScoped<PaymentProgram>() // Adiciona o PaymentProgram
                 .BuildServiceProvider();
 
             // Recupera o PaymentProgram via injeção de dependência
             var paymentProgram = serviceProvider.GetService<PaymentProgram>();
 
-            // Executa o programa de pagamento
-            paymentProgram?.Execute(); // Verifica se o serviço não é nulo antes de chamar
+            // Simula a execução de diferentes pagamentos
+            paymentProgram?.ExecutePayment("paypal", "seu_paypal_token", 200);      // Exemplo PayPal
+            paymentProgram?.ExecutePayment("stripe", "seu_stripe_token", 150);      // Exemplo Stripe
+            paymentProgram?.ExecutePayment("googlepay", "seu_google_token", 120);   // Exemplo Google Pay
+            paymentProgram?.ExecutePayment("mercadopago", "seu_mercado_token", 100);// Exemplo Mercado Pago
         }
     }
-
     //Se tirar essa classe abaixo, dará erro.
     internal class PaymentProgram
     {
