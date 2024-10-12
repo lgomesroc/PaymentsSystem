@@ -106,15 +106,15 @@ export PAYPAL_CLIENT_SECRET="SEU_CLIENT_SECRET_AQUI"
 
 Para usar o serviço de pagamento do Stripe, você deve definir a seguinte variável de ambiente:
 
-``bash
+```bash
 export STRIPE_SECRET_KEY="SEU_STRIPE_SECRET_KEY_AQUI"
-
+```
 
 ## Configuração do Google Pay
 
 Para usar o serviço de pagamento do Google Pay, é necessário fornecer o caminho para o arquivo de credenciais do Google:
 
-```csharp
+```bash
 var credential = GoogleCredential.FromFile("path/to/googlepay-credentials.json");
 ```
 
